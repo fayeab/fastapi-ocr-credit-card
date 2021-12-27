@@ -10,9 +10,10 @@ from extraction import extract_infos_carte
 from pydantic import BaseModel
 from utils import load_users, User, verify_user, Token, create_access_token, decode_access_token
 import logging
-from config import config
+from config import config, config_logging
 
-logging.basicConfig(format='%(asctime)s %(message)s')
+logging.config.dictConfig(config_logging)
+logger = logging.getLogger()
 oauth2_scheme = HTTPBearer()
 users = load_users(**config)
 
@@ -64,20 +65,20 @@ async def login_for_access_token(form_data: AuthModel):
     """
     username = verify_user(users, form_data.username, form_data.password)
     if not username:
-        logging.info(f'/token - credential errors for user {form_data.username}')
+        logger.info(f'/token - credential errors for user {form_data.username}')
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token = create_access_token(username)
-    logging.info(f'/token - token emitted for user {form_data.username}')
+    logger.info(f'/token - token emitted for user {form_data.username}')
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @app.get("/users/me/", response_model=Token)
 async def read_users_me(current_user: User = Depends(get_current_user)):
-    logging.info(f'/users/me - {current_user}')
+    logger.info(f'/users/me - {current_user}')
     return {'login': current_user}
 
 @app.post("/ocr_upload", response_model=Extraction)
