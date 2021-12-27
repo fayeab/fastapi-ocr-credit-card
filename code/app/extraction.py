@@ -2,7 +2,7 @@ import cv2
 import regex
 import imutils
 import pytesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Users\fayab\AppData\Local\Tesseract-OCR\tesseract.exe'
+
 type_carte = {"4": "Visa",
               "5": "MasterCard"}
 

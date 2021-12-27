@@ -8,3 +8,5 @@ imutils==0.5.4
 python-multipart==0.0.5
 numpy==1.19.2
 pytest==6.2.4
+python-jose>=3.0.0
+passlib
